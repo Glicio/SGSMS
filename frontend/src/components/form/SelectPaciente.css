@@ -1,0 +1,13 @@
+.selectButton{ 
+    width: 20rem;
+    white-space: nowrap;
+    text-align: left;
+    color: white;
+    background-color: var(--primary-color);
+    padding: 0.25rem;
+    z-index: 999;
+}
+.selectButton:hover{
+    background-color: var(--secondary-color);
+    
+}

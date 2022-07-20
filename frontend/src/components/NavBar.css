@@ -1,0 +1,42 @@
+.nav-bar{
+    border-left: 2px solid var(--secondary-color);
+    padding-inline: .8rem;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    height: 2.5rem;
+    background-color: var(--primary-color);
+    border-bottom: 2px solid var(--secondary-color);
+}
+.nav-btn{
+    margin-inline: .5rem;
+    font-size: small;
+    display: flex;
+    color: white;
+    text-shadow: 1px 1px black;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: 0.1s ease;
+}
+.nav-btn:hover{
+    color:grey;
+}
+.separador{
+    margin-inline: 0.5rem;
+    height: 80%;
+    width: 2px;
+    background-color: gray;
+}
+.logo{
+    color: white;
+    font-weight: bold;
+    text-shadow: 1px 1px black;
+}
+.disabled{
+    color: grey;
+    cursor: default;
+}

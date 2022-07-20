@@ -1,0 +1,35 @@
+.medicamentos-list-table{
+    color: white;
+    border-collapse: collapse;
+    width: 100%;
+}
+.medicamentos-list-table th, td{
+    padding: 0.3rem 1rem;
+
+
+}
+.medicamentos-list-table th{
+    border-block: 1px solid var(--secondary-color);
+}
+
+.medicamentos-list-table tr{
+    border-block: 2px solid black;
+}
+.sub-select{
+    margin-top: 3rem;
+    width: 40rem;
+    overflow: hidden;
+    color: white;
+    background-color: var(--primary-color);
+    height: fit-content;
+    padding: 1rem;
+}
+.pacientes-table{
+    white-space: nowrap;
+    border-collapse: collapse;
+    width: 100%;
+}
+.pacientes-table thead tr{
+    
+    border-block: 2px solid black;
+}

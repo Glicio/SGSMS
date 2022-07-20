@@ -1,0 +1,55 @@
+.saude-bg{
+    position: fixed;
+    background-size: 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+    transform: translate(-50%, -50%);
+    z-index: -999;
+    width: 100%;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+    opacity: 0.1;
+}
+.main-component{
+    display: flex;
+    width: auto;
+    height: 100%;
+}
+.content{
+    width: 100%;
+    height: 100%;
+    display: flex;
+
+    justify-content: center;
+}
+
+.main-content{
+    overflow: scroll;
+    height: 100%;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: transparent; 
+    height: 0px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: var(--secondary-color); 
+  }
+  ::-webkit-scrollbar-corner {
+    height: 0px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }
+
+

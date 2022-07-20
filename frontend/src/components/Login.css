@@ -1,0 +1,100 @@
+.login-container{
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+}
+.login-bar{
+    min-width: fit-content;
+    background-color: var(--primary-color);
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 25vw;
+}
+.form-item{
+    margin: 0.5vh 0;
+    display: flex;
+    flex-direction: column;
+}
+.login-btn{
+    margin: 1rem 0;
+    background-color: #3A87F5;
+    border-radius: 0.25rem;
+    border: 1px solid black;
+    height: 1.5rem;
+    transition: .2s linear;
+}
+.login-btn:hover{
+    transform: translate(0px, -2px);
+    color: white;
+    box-shadow: 2px 2px rgb(0, 0, 0);
+}
+.login-btn:active{
+    transform: translate(0px, 2px);
+    background-color: var(--secondary-color);
+    box-shadow: none;
+}
+
+.login-bg{
+    border-left: 1px solid black;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
+}
+
+.login-logo{
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+}
+.logo-div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 8px;
+    
+    position: fixed;
+    top: 10vh;
+}
+.app-info{
+   margin-top: auto;
+   color: gray;
+   font-size: 10px;
+}
+@keyframes login-error-anim {
+    0% {transform: scale(50%);}
+    100% {transform: scale(100%);}
+}
+
+.login-info{
+    font-size: 0.8rem;
+    background-color: rgb(180, 14, 14);
+    border-radius: 0.25rem;
+    padding: 0.25rem;
+    color: white;
+    animation: login-error-anim;
+    animation-duration: 0.2s;
+    max-width: 15vw;
+}
+
+
+@media (max-width: 600px){
+    .login-bar{
+        background-color: white;
+        width: 100vw;
+        margin: 0;
+    }
+    .login-bg{
+        display: none;
+    }
+}
+@media (max-height: 420px){
+    .login-logo{
+        display: none;
+    }
+}

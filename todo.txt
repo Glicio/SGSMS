@@ -1,0 +1,3 @@
+adicionar loads
+tela de ultima saída no form de saídas
+farmácia: pode salvar sem medicamentos+

@@ -1,0 +1,36 @@
+.medicamentoInputContainer{
+    display: flex;
+    align-items: center;
+}
+.medicamentoInput{
+    height: 1.2rem;
+}
+.form-item input{
+
+}
+.medicamentos-container{
+    margin-left: 0.5rem;
+    width:100%;
+    overflow: scroll;
+    height: 5rem;
+    min-height: fit-content;
+    padding: 0.2rem;
+    border: 1px solid black;
+    padding-bottom: none;
+    overflow-x: hidden;
+    background-color: white;
+}
+.medicamento{
+    justify-content: left;
+    display: flex;
+    background-color: var(--secondary-color);
+    width: 98%;
+    white-space: nowrap;
+    height: fit-content;
+    padding: 0.2rem;
+    border-radius: 0.25rem;
+    margin: 0.1rem;
+    font-weight: normal;
+    font-size: small;
+    text-align: center;
+}
