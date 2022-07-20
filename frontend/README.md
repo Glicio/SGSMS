@@ -1,2 +1,2 @@
-# Sistema de Gerenciamento de marcações e medicamentos
+# Parte Front-end Criado com Create-react-app
 
