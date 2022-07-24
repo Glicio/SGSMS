@@ -30,6 +30,8 @@ const SelectBeneficiado = ({ setBeneficiado, setSelf }) => {
   const [search, setSearch] = useState("");
   const [searchDebouncer, setSearchDebouncer] = useState("");
   const [pacientesList, setPacientesList] = useState();
+  const [loading, setLoading] = useState(false);
+  const saudeContext = useContext(SaudeContext)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -42,23 +44,27 @@ const SelectBeneficiado = ({ setBeneficiado, setSelf }) => {
   }, [searchDebouncer]);
 
   useEffect(() => {
-    search !== "" &&
-      api
-        .post(
-          "/paciente/get",
-          { search: search, limit: 5, page: 1 },
-          {
-            headers: {
-              authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        )
-        .then((result) => {
-          setPacientesList(result.data.pacientes);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+    if (search === "") return;
+    setLoading(true);
+    api
+      .post(
+        "/paciente/get",
+        { search: search, limit: 5, page: 1 },
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((result) => {
+        setPacientesList(result.data.pacientes);
+        setLoading(false)
+      })
+      .catch((err) => {
+        setLoading(false)
+        saudeContext.notify.error("Não foi possível obter a lista de pacientes!", {position: "bottom-right"})
+        console.error(err);
+      });
   }, [search]);
 
   const selectPaciente = (paciente) => {
@@ -99,6 +105,7 @@ const SelectBeneficiado = ({ setBeneficiado, setSelf }) => {
             </tr>
           </thead>
           <tbody>
+            {loading && <tr><td colSpan={3}>Carregando...</td></tr> }
             {pacientesList ? (
               pacientesList.map((curr, index) => {
                 return (
@@ -117,10 +124,10 @@ const SelectBeneficiado = ({ setBeneficiado, setSelf }) => {
                   </tr>
                 );
               })
-            ) : (
+            ) : ( !loading ?
               <tr>
                 <td colSpan={"3"}>Nada encontrado</td>
-              </tr>
+              </tr> : <></>
             )}
           </tbody>
         </table>
@@ -225,6 +232,83 @@ const SelectMedicamento = ({ addMedicamento, setSelf }) => {
   );
 };
 
+const LastSaida = ({ paciente }) => {
+  const saudeContext = useContext(SaudeContext);
+  const [lastSaida, setLastSaida] = useState({});
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(true);
+    api
+      .get(`/saidas/get/${paciente._id}`, {
+        headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((result) => {
+        setLastSaida({
+          ...result.data,
+          data: new Date(result.data.data).toLocaleDateString("pt-br"),
+        });
+        setLoading(false);
+      })
+      .catch((err) => {
+        saudeContext.notify.error(
+          "Não foi possível obeter a ultima saída deste paciente",
+          { position: "bottom-right" }
+        );
+        console.error(err);
+        setLoading(false);
+      });
+  }, [paciente]);
+  if (loading) {
+    return (
+      <div className="last-saida">
+        Ultima Movimentação deste Paciente
+        <div className="separador-menu" style={{ margin: "0 auto" }}></div>
+        <div className="infos">Carregando...</div>
+      </div>
+    );
+  }
+  if (lastSaida.medicamentos) {
+    return (
+      <div className="last-saida">
+        Ultima Movimentação deste Paciente
+        <div className="separador-menu" style={{ margin: "0 auto" }}></div>
+        <div className="infos">
+          <span>
+            Data: <span>{lastSaida.data}</span>
+          </span>
+          <br />
+          <span>Itens:</span>
+          <br />
+          <ul
+            style={{
+              listStyle: "circle",
+              overflow: "visible",
+              padding: ".5rem",
+            }}
+          >
+            {lastSaida.medicamentos &&
+              lastSaida.medicamentos.map((curr, index) => {
+                return (
+                  <li key={index}>
+                    • {curr.quantidade} {curr.unidade}(S) de {curr.descricao}
+                  </li>
+                );
+              })}
+          </ul>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="last-saida">
+      Ultima Movimentação deste Paciente
+      <div className="separador-menu" style={{ margin: "0 auto" }}></div>
+      <div className="infos">
+        <span>Este paciente ainda não tem nenhuma movimentação!</span>
+      </div>
+    </div>
+  );
+};
 // end sub menus ===================================================
 
 export default function SaidaForm({ saidaToEdit, setSelf, refresh }) {
@@ -238,58 +322,89 @@ export default function SaidaForm({ saidaToEdit, setSelf, refresh }) {
         }
   );
   const userContext = useContext(UserContext);
-  const saudeContext = useContext(SaudeContext)
+  const saudeContext = useContext(SaudeContext);
 
-  useEffect(() => {
-    console.log(saida);
-  }, [saida]);
+  // useEffect(() => {
+  //   console.log(saida);
+  // }, [saida]);
+
+  useEffect(() => {}, [saida]);
 
   const insertSaida = () => {
-    if(!saida.paciente || !saida.medicamentos) {
-      saudeContext.notify.error("É preciso informar um paciente e ao menos um item!", {position: "bottom-right"})
-      return
+    if (!saida.paciente || !saida.medicamentos) {
+      saudeContext.notify.error(
+        "É preciso informar um paciente e ao menos um item!",
+        { position: "bottom-right" }
+      );
+      return;
     }
-    api.post(
-      "/saidas/create/",
-      {
-        saida: {
-          medicamentos: saida.medicamentos,
-          paciente: saida.paciente,
-          data: Date.now(),
-          user: userContext.currentUser,
+    api
+      .post(
+        "/saidas/create/",
+        {
+          saida: {
+            medicamentos: saida.medicamentos,
+            paciente: saida.paciente,
+            data: Date.now(),
+            user: userContext.currentUser,
+          },
         },
-      },
-      { headers: { authorization: `Bearer ${localStorage.getItem("token")}` } }
-    ).then(() => {
-      saudeContext.notify.success("Saída inserida com sucesso!", {position: "bottom-right"})
-      setSelf()
-      refresh()
-    }).catch((err) => {
-      console.error(err)
-      saudeContext.notify.error("Erro ao inserir saída!", {position: "bottom-right"})
-    });
+        {
+          headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      )
+      .then(() => {
+        saudeContext.notify.success("Saída inserida com sucesso!", {
+          position: "bottom-right",
+        });
+        setSelf();
+        refresh();
+      })
+      .catch((err) => {
+        console.error(err);
+        saudeContext.notify.error("Erro ao inserir saída!", {
+          position: "bottom-right",
+        });
+      });
   };
 
   const saveEdited = () => {
-    api.post(
-      "/saidas/update/",
-      {
-        saida: {
-          _id: saida._id,
-          medicamentos: saida.medicamentos,
-          paciente: saida.paciente,
+    if (saida.medicamentos.length < 1 || !saida.paciente) {
+      saudeContext.notify.error(
+        "É preciso informar um paciente e ao menos um item!",
+        { position: "bottom-right" }
+      );
+      return;
+    }
+    console.log(saida.medicamentos);
+    api
+      .post(
+        "/saidas/update/",
+        {
+          saida: {
+            _id: saida._id,
+            medicamentos: saida.medicamentos,
+            paciente: saida.paciente,
+          },
         },
-      },
-      { headers: { authorization: `Bearer ${localStorage.getItem("token")}` } }
-    ).then(() => {
-      saudeContext.notify.success("Saída editada com sucesso!", {position: "bottom-right"})
-      setSelf()
-      refresh()
-    }).catch((err) => {
-      console.error(err)
-      saudeContext.notify.error("Erro ao editar saída!", {position: "bottom-right"})
-    });
-  }
+        {
+          headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      )
+      .then(() => {
+        saudeContext.notify.success("Saída editada com sucesso!", {
+          position: "bottom-right",
+        });
+        setSelf();
+        refresh();
+      })
+      .catch((err) => {
+        console.error(err);
+        saudeContext.notify.error("Erro ao editar saída!", {
+          position: "bottom-right",
+        });
+      });
+  };
 
   const setBeneficiado = (paciente) => {
     setSaida((old) => {
@@ -349,6 +464,7 @@ export default function SaidaForm({ saidaToEdit, setSelf, refresh }) {
         e.target.className === "modal-container" && setSelf();
       }}
     >
+      {saida.paciente && !saida._id && <LastSaida paciente={saida.paciente} />}
       {showSelectMedicamento && (
         <SelectMedicamento
           addMedicamento={addMedicamento}
@@ -509,7 +625,7 @@ export default function SaidaForm({ saidaToEdit, setSelf, refresh }) {
           className="login-btn"
           style={{ alignSelf: "end", margin: "0.5rem" }}
           onClick={() => {
-            saida._id ? saveEdited() : insertSaida()
+            saida._id ? saveEdited() : insertSaida();
           }}
         >
           Salvar

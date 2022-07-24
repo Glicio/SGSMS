@@ -1,4 +1,5 @@
 require("dotenv").config();
+require("./database/database")
 const cors = require("cors");
 const express = require("express");
 const PORT = process.env.PORT;
@@ -13,15 +14,9 @@ app.use(require("./routes/userRoutes"));
 app.use(require("./routes/paciEnteRoutes"));
 app.use(require("./routes/medicamentoRoutes"));
 app.use(require("./routes/saidaMedicamentosRoutes"));
-const {
-  createRefreshToken,
-  validateRefreshToken,
-  deleteRefreshToken,
-  validateToken,
-  userIsAdmin,
-} = require("./database/database.js");
-const { createUser } = require("./database/userHandler");
+
 app.use(express.static(path.join(__dirname, "./build/")));
+
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname,"./build/index.html"))
@@ -30,9 +25,12 @@ app.get("*", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor Rodando na porta: ${PORT}`);
 });
+
+
 /*
 const glicio = { 
-  name: "Glciio Pereira Uchoa",
+  const { createUser } = require("./database/userHandler");
+  name: "Glicio Pereira Uchoa",
   cpf: "117.497.514-88",
   email: "glicioo@outlook.com",
   password: "Glicio123",

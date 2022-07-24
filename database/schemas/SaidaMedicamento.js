@@ -8,7 +8,7 @@ const SaidaMedicamentoSchema = new mongoose.Schema({
   },
   paciente: {
     name: String,
-    id: String,
+    _id: String,
     cpf: String,
     cartao_sus: String,
   },

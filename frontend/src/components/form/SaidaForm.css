@@ -33,3 +33,29 @@
     
     border-block: 2px solid black;
 }
+.last-saida{
+    text-align: center;
+    padding: 0.5rem;
+    position: absolute;
+    color: white;
+    background-color: var(--primary-color);
+    height: 8rem;
+    width: 20rem;
+    right: 2rem;
+    top: 3rem;
+    transform: translate(0, -50%);
+    animation: pop-right 0.2s ease forwards;
+}
+
+@keyframes pop-right {
+    0%{
+        transform: translate(200%, 0);
+    }
+    100%{
+        transform: translate(0, 0);
+    }
+}
+.infos{
+    text-align: left;
+    padding: 0.5rem;
+}

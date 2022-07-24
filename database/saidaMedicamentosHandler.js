@@ -48,6 +48,11 @@ async function editSaida(saidaToUpdate) {
   return Saida.updateOne({_id: saidaToUpdate._id},{paciente: paciente, medicamentos: medicamentos})
 }
 
+async function getSaidaByPacienteId(pacienteId){
+  const saida = await Saida.findOne({"paciente._id": pacienteId},{},{sort:{data: -1 }})
+  return saida
+}
+
 async function deleteSaida(id) {
   return Saida.deleteOne({ _id: id });
 }
@@ -56,3 +61,4 @@ module.exports.editSaida = editSaida;
 module.exports.deleteSaida = deleteSaida;
 module.exports.insertSaida = insertSaida;
 module.exports.getSaidasPaginated = getSaidasPaginated;
+module.exports.getSaidaByPacienteId = getSaidaByPacienteId

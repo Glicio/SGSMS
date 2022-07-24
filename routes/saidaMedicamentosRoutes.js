@@ -4,8 +4,10 @@ const {
   getSaidasPaginated,
   deleteSaida,
   editSaida,
+  getSaidaByPacienteId,
 } = require("../database/saidaMedicamentosHandler");
 const router = express.Router();
+
 const {
   validateUserToken,
   canUseFarmacia,
@@ -35,29 +37,36 @@ router.post("/saidas/get", validateUserToken, canUseFarmacia, (req, res) => {
     });
 });
 
-router.post(
-  "/saidas/delete",
-  validateUserToken,
-  canUseFarmacia,
-  (req, res) => {
-    const id = req.body.id
-    deleteSaida(id).then((result) => {
-      return res.status(200).send(result)
+router.get('/saidas/get/:pacienteId',validateUserToken, canUseFarmacia,(req, res) => {
+    getSaidaByPacienteId(req.params.pacienteId).then((result) => {
+      return res.send(result)
     }).catch((err) => {
+      
       return res.status(300).send(err)
     });
-  }
-);
-
-router.post("/saidas/update", validateUserToken, canUseFarmacia, (req,res) => {
-  const saida = req.body.saida
-  editSaida(saida).then((result) => {
-    return res.status(204).send(result)
-  }).catch((err) => {
-    console.log(err);
-    return res.status(300).send(err)
-
-  });
 })
+
+router.post("/saidas/delete", validateUserToken, canUseFarmacia, (req, res) => {
+  const id = req.body.id;
+  deleteSaida(id)
+    .then((result) => {
+      return res.status(200).send(result);
+    })
+    .catch((err) => {
+      return res.status(300).send(err);
+    });
+});
+
+router.post("/saidas/update", validateUserToken, canUseFarmacia, (req, res) => {
+  const saida = req.body.saida;
+  editSaida(saida)
+    .then((result) => {
+      return res.status(204).send(result);
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(300).send(err);
+    });
+});
 
 module.exports = router;
